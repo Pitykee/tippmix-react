@@ -7,14 +7,22 @@ import { Col, Container, Row, Button, FormControl } from "react-bootstrap";
 import { TippmixContext } from "../context/TippmixContext";
 
 const Tippmix = () => {
-  const { randomNumber, min, max, tipp, addHidden, removeHidden } =
-    useContext(TippmixContext);
+  const {
+    randomNumber,
+    setRandomNumber,
+    min,
+    max,
+    tipp,
+    addHidden,
+    removeHidden,
+  } = useContext(TippmixContext);
   const [score, setScore] = useState("");
   const [firstScreen, setFirstScreen] = useState(removeHidden);
   const [secoundScreen, setSecoundScreen] = useState(addHidden);
   const [thirdScreen, setThirdScreen] = useState(addHidden);
   const [remaining, setRemaining] = useState(10);
   const [clue, setClue] = useState("");
+  const [result, setResult] = useState("");
 
   const newGame = () => {
     setFirstScreen(addHidden);
@@ -28,6 +36,7 @@ const Tippmix = () => {
       setFirstScreen(addHidden);
       setSecoundScreen(addHidden);
       setThirdScreen(removeHidden);
+      setResult("nyertél");
       return;
     }
 
@@ -37,6 +46,7 @@ const Tippmix = () => {
         setFirstScreen(addHidden);
         setSecoundScreen(addHidden);
         setThirdScreen(removeHidden);
+        setResult("vesztettél");
       } else {
         setClue(Number(score) > randomNumber ? "kisebb" : "nagyobb");
         setScore("");
@@ -44,7 +54,17 @@ const Tippmix = () => {
       return next;
     });
   };
-  console.log(score);
+
+  const endGame = () => {
+    setFirstScreen(removeHidden);
+    setSecoundScreen(addHidden);
+    setThirdScreen(addHidden);
+    setResult("");
+    setRemaining(10);
+    setRandomNumber("");
+    setScore("");
+  };
+
   return (
     <>
       <Container className="bg-success text-center py-4">
@@ -95,10 +115,13 @@ const Tippmix = () => {
         <Row className="justify-content-center">
           <Col className={`${thirdScreen}`} md="6">
             <div className="rounded-5 p-4 mb-3 bg-info">
-              <h5>Vége a játéknak, nyertél!</h5>
+              <h5>{`Vége a játéknak, ${result}!`}</h5>
             </div>
             <p className="opacity-50">Még egy menet?</p>
-            <Button className="bg-gradient rounded-5 py-2 px-4">
+            <Button
+              className="bg-gradient rounded-5 py-2 px-4"
+              onClick={endGame}
+            >
               új játék
             </Button>
           </Col>
