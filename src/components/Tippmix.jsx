@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 
 // bootstrap
-import { Col, Container, Row, Button } from "react-bootstrap";
+import { Col, Container, Row, Button, FormControl } from "react-bootstrap";
 
 // context
 import { TippmixContext } from "../context/TippmixContext";
@@ -9,10 +9,12 @@ import { TippmixContext } from "../context/TippmixContext";
 const Tippmix = () => {
   const { randomNumber, min, max, tipp, addHidden, removeHidden } =
     useContext(TippmixContext);
-  const [score, setScore] = useState();
+  const [score, setScore] = useState("");
   const [firstScreen, setFirstScreen] = useState(removeHidden);
   const [secoundScreen, setSecoundScreen] = useState(addHidden);
   const [thirdScreen, setThirdScreen] = useState(addHidden);
+  const [remaining, setRemaining] = useState(10);
+  const [clue, setClue] = useState("");
 
   const newGame = () => {
     setFirstScreen(addHidden);
@@ -20,6 +22,29 @@ const Tippmix = () => {
     setThirdScreen(addHidden);
     tipp();
   };
+
+  const userNumber = () => {
+    if (score === randomNumber) {
+      setFirstScreen(addHidden);
+      setSecoundScreen(addHidden);
+      setThirdScreen(removeHidden);
+      return;
+    }
+
+    setRemaining((last) => {
+      const next = last - 1;
+      if (next < 0) {
+        setFirstScreen(addHidden);
+        setSecoundScreen(addHidden);
+        setThirdScreen(removeHidden);
+      } else {
+        setClue(Number(score) > randomNumber ? "kisebb" : "nagyobb");
+        setScore("");
+      }
+      return next;
+    });
+  };
+  console.log(score);
   return (
     <>
       <Container className="bg-success text-center py-4">
@@ -47,14 +72,24 @@ const Tippmix = () => {
         <Row className="justify-content-center">
           <Col className={`${secoundScreen}`} md="6">
             <div className="rounded-5 p-4 mb-3 bg-info">
-              <h5>A szám a tippednél kisebb</h5>
+              <h5>{`A szám a tippednél ${clue}`}</h5>
             </div>
-            <p className="opacity-50">lehetőség maradt</p>
+            <p className="opacity-50">{`${remaining} lehetőséged maradt`}</p>
             <h5>Mit tippelsz?</h5>
             <div className="mb-3">
-              <input type="text" onChange={(e) => setScore(e.target.value)} />
+              <FormControl
+                type="number"
+                placeholder="Szám"
+                value={score}
+                onChange={(e) => setScore(Number(e.target.value))}
+              />
             </div>
-            <Button className="bg-gradient rounded-5 py-2 px-4">Beküld</Button>
+            <Button
+              className="bg-gradient rounded-5 py-2 px-4"
+              onClick={userNumber}
+            >
+              Beküld
+            </Button>
           </Col>
         </Row>
         <Row className="justify-content-center">
