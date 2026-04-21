@@ -42,7 +42,7 @@ const Tippmix = () => {
 
     setRemaining((last) => {
       const next = last - 1;
-      if (next < 0) {
+      if (next < 1) {
         setFirstScreen(addHidden);
         setSecoundScreen(addHidden);
         setThirdScreen(removeHidden);
@@ -67,22 +67,20 @@ const Tippmix = () => {
 
   return (
     <>
-      <Container className="bg-success text-center py-4">
+      <Container className="tippbg d-flex flex-column text-center py-3 rounded-4">
         <Row>
-          <Col>
+          <Col className="m-4">
             <h1>Tippmix</h1>
           </Col>
         </Row>
-      </Container>
-      <Container className="d-flex text-center py-3 bg-warning flex-column">
         <Row className="justify-content-center">
           <Col className={`${firstScreen}`} md="6">
-            <div className="rounded-5 p-4 mb-3 bg-info">
+            <div className="rounded-4 p-4 mb-3 bg-info">
               <h5>{`Gondoltam egy számra ${min} és ${max} között`}</h5>
             </div>
             <p className="opacity-50">Kitalálod?</p>
             <Button
-              className="bg-gradient rounded-5 py-2 px-4"
+              className="bg-gradient rounded-4 py-2 px-4"
               onClick={newGame}
             >
               Kezdés
@@ -91,7 +89,7 @@ const Tippmix = () => {
         </Row>
         <Row className="justify-content-center">
           <Col className={`${secoundScreen}`} md="6">
-            <div className="rounded-5 p-4 mb-3 bg-info">
+            <div className="rounded-4 p-4 mb-3 bg-info">
               <h5>{`A szám a tippednél ${clue}`}</h5>
             </div>
             <p className="opacity-50">{`${remaining} lehetőséged maradt`}</p>
@@ -114,12 +112,12 @@ const Tippmix = () => {
         </Row>
         <Row className="justify-content-center">
           <Col className={`${thirdScreen}`} md="6">
-            <div className="rounded-5 p-4 mb-3 bg-info">
+            <div className="rounded-4 p-4 mb-3 bg-info">
               <h5>{`Vége a játéknak, ${result}!`}</h5>
             </div>
             <p className="opacity-50">Még egy menet?</p>
             <Button
-              className="bg-gradient rounded-5 py-2 px-4"
+              className="bg-gradient rounded-4 py-2 px-4"
               onClick={endGame}
             >
               új játék
