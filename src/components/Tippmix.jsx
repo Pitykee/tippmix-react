@@ -32,11 +32,23 @@ const Tippmix = () => {
   };
 
   const userNumber = () => {
-    if (score === randomNumber) {
+    const num = Number(score);
+
+    if (score === "" || isNaN(num)) {
+      setClue(`Írj be egy számot!`);
+      return;
+    }
+
+    if (num < min || num > max) {
+      setClue(`Csak ${min} és ${max} között letet tippelni!`);
+      return;
+    }
+
+    if (num === randomNumber) {
       setFirstScreen(addHidden);
       setSecoundScreen(addHidden);
       setThirdScreen(removeHidden);
-      setResult("nyertél");
+      setResult("Gratulálunk, nyertél!");
       return;
     }
 
@@ -46,9 +58,11 @@ const Tippmix = () => {
         setFirstScreen(addHidden);
         setSecoundScreen(addHidden);
         setThirdScreen(removeHidden);
-        setResult("vesztettél");
+        setResult("Sajnáljuk, vesztettél!");
       } else {
-        setClue(Number(score) > randomNumber ? "kisebb" : "nagyobb");
+        setClue(
+          Number(score) > randomNumber ? "A szám kisebb." : "A szám nagyobb.",
+        );
         setScore("");
       }
       return next;
@@ -90,16 +104,18 @@ const Tippmix = () => {
         <Row className="justify-content-center">
           <Col className={`${secoundScreen}`} md="6">
             <div className="rounded-4 p-4 mb-3 bg-info">
-              <h5>{`A szám a tippednél ${clue}`}</h5>
+              <h5>{`${clue}`}</h5>
             </div>
             <p className="opacity-50">{`${remaining} lehetőséged maradt`}</p>
             <h5>Mit tippelsz?</h5>
             <div className="mb-3">
               <FormControl
                 type="number"
+                min={min}
+                max={max}
                 placeholder="Szám"
                 value={score}
-                onChange={(e) => setScore(Number(e.target.value))}
+                onChange={(e) => setScore(e.target.value)}
               />
             </div>
             <Button
@@ -113,7 +129,7 @@ const Tippmix = () => {
         <Row className="justify-content-center">
           <Col className={`${thirdScreen}`} md="6">
             <div className="rounded-4 p-4 mb-3 bg-info">
-              <h5>{`Vége a játéknak, ${result}!`}</h5>
+              <h5>{`${result}`}</h5>
             </div>
             <p className="opacity-50">Még egy menet?</p>
             <Button
