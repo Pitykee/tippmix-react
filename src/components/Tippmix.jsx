@@ -8,75 +8,23 @@ import { TippmixContext } from "../context/TippmixContext";
 
 const Tippmix = () => {
   const {
-    randomNumber,
-    setRandomNumber,
     min,
     max,
+    remaining,
+    result,
+    clue,
+    firstScreen,
+    secoundScreen,
+    thirdScreen,
     tipp,
-    addHidden,
-    removeHidden,
+    userNumber,
+    endGame,
   } = useContext(TippmixContext);
   const [score, setScore] = useState("");
-  const [firstScreen, setFirstScreen] = useState(removeHidden);
-  const [secoundScreen, setSecoundScreen] = useState(addHidden);
-  const [thirdScreen, setThirdScreen] = useState(addHidden);
-  const [remaining, setRemaining] = useState(10);
-  const [clue, setClue] = useState("");
-  const [result, setResult] = useState("");
 
-  const newGame = () => {
-    setFirstScreen(addHidden);
-    setSecoundScreen(removeHidden);
-    setThirdScreen(addHidden);
-    tipp();
-  };
-
-  const userNumber = () => {
-    const num = Number(score);
-
-    if (score === "" || isNaN(num)) {
-      setClue(`Írj be egy számot!`);
-      return;
-    }
-
-    if (num < min || num > max) {
-      setClue(`Csak ${min} és ${max} között letet tippelni!`);
-      return;
-    }
-
-    if (num === randomNumber) {
-      setFirstScreen(addHidden);
-      setSecoundScreen(addHidden);
-      setThirdScreen(removeHidden);
-      setResult("Gratulálunk, nyertél!");
-      return;
-    }
-
-    setRemaining((last) => {
-      const next = last - 1;
-      if (next < 1) {
-        setFirstScreen(addHidden);
-        setSecoundScreen(addHidden);
-        setThirdScreen(removeHidden);
-        setResult("Sajnáljuk, vesztettél!");
-      } else {
-        setClue(
-          Number(score) > randomNumber ? "A szám kisebb." : "A szám nagyobb.",
-        );
-        setScore("");
-      }
-      return next;
-    });
-  };
-
-  const endGame = () => {
-    setFirstScreen(removeHidden);
-    setSecoundScreen(addHidden);
-    setThirdScreen(addHidden);
-    setResult("");
-    setRemaining(10);
-    setRandomNumber("");
+  const handleEndGame = () => {
     setScore("");
+    endGame();
   };
 
   return (
@@ -88,25 +36,22 @@ const Tippmix = () => {
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col className={`${firstScreen}`} md="6">
+          <Col className={firstScreen} md="6">
             <div className="rounded-4 p-4 mb-3 bg-info">
               <h5>{`Gondoltam egy számra ${min} és ${max} között`}</h5>
             </div>
             <p className="opacity-50">Kitalálod?</p>
-            <Button
-              className="bg-gradient rounded-4 py-2 px-4"
-              onClick={newGame}
-            >
+            <Button className="bg-gradient rounded-4 py-2 px-4" onClick={tipp}>
               Kezdés
             </Button>
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col className={`${secoundScreen}`} md="6">
+          <Col className={secoundScreen} md="6">
             <div className="rounded-4 p-4 mb-3 bg-info">
               <h5>{`${clue}`}</h5>
             </div>
-            <p className="opacity-50">{`${remaining} lehetőséged maradt`}</p>
+            <p className="opacity-50">{remaining} lehetőséged maradt</p>
             <h5>Mit tippelsz?</h5>
             <div className="mb-3">
               <FormControl
@@ -120,21 +65,21 @@ const Tippmix = () => {
             </div>
             <Button
               className="bg-gradient rounded-5 py-2 px-4"
-              onClick={userNumber}
+              onClick={() => userNumber(score)}
             >
               Beküld
             </Button>
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col className={`${thirdScreen}`} md="6">
+          <Col className={thirdScreen} md="6">
             <div className="rounded-4 p-4 mb-3 bg-info">
-              <h5>{`${result}`}</h5>
+              <h5>{result}</h5>
             </div>
             <p className="opacity-50">Még egy menet?</p>
             <Button
               className="bg-gradient rounded-4 py-2 px-4"
-              onClick={endGame}
+              onClick={handleEndGame}
             >
               új játék
             </Button>
